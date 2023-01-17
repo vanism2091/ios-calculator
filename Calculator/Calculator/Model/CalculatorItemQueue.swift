@@ -8,10 +8,14 @@
 import Foundation
 
 struct CalculatorItemQueue {
-    private var items: [CalculateItem] = []
+    private(set) var items: [CalculateItem] = []
 
     var isEmpty: Bool {
         items.isEmpty
+    }
+
+    var count: Int {
+        items.count
     }
 
     mutating func enqueue(item: CalculateItem) {

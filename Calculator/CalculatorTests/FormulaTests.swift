@@ -24,10 +24,6 @@ final class FormulaTests: XCTestCase {
         XCTAssertTrue(sut.operators.isEmpty)
     }
 
-    func test_Formula가_비어있을때_result는_0이다() throws {
-        XCTAssertEqual(try? sut.result(), 0.0)
-    }
-
     func test_operands가_1_2이고_operator가_add일때_result는_3이다() throws {
         let operand1 = 1.0
         let operand2 = 2.0
@@ -47,6 +43,10 @@ final class FormulaTests: XCTestCase {
         let operator1 = Operator.add
         sut.operators.enqueue(item: operator1)
 
+        XCTAssertThrowsError(try sut.result())
+    }
+
+    func test_Formula가_비어있을때_result호출시_에러() throws {
         XCTAssertThrowsError(try sut.result())
     }
 }

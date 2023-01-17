@@ -7,16 +7,25 @@
 
 import Foundation
 
+enum FormulaError: Error {
+    case dividedByZero
+    case wrongFormula
+}
+
 struct Formula {
     var operands = CalculatorItemQueue()
     var operators = CalculatorItemQueue()
 
-    mutating func result() throws -> Double {
-        guard let operand1 = operands.dequeue() as? Double,
-              let operand2 = operands.dequeue() as? Double,
-              let operator1 = operators.dequeue() as? Operator else {
+    func result() throws -> Double {
+        guard operands.count == operators.count + 1 else {
+            throw FormulaError.wrongFormula
+        }
+
+        guard let operandsArray = operands.items as? [Double],
+              let operator1 = operators.items[0] as? Operator else {
             return 0.0
         }
-        return operator1.calculate(lhs: operand1, rhs: operand2)
+
+        return operator1.calculate(lhs: operandsArray[0], rhs: operandsArray[1])
     }
 }
