@@ -9,4 +9,7 @@ import Foundation
 
 enum Operator: CalculateItem {
     case add
+    case subtract
+    case multiply
+    case divide
 }
