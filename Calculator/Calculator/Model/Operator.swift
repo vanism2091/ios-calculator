@@ -7,24 +7,40 @@
 
 import Foundation
 
-enum Operator: CalculateItem {
-    case add
-    case subtract
-    case multiply
-    case divide
+enum Operator: Character, CalculateItem, CaseIterable {
+    case add = "+"
+    case subtract = "−"
+    case multiply = "×"
+    case divide = "÷"
 }
 
-extension Operator: CustomStringConvertible {
-    var description: String {
+extension Operator {
+    func calculate(lhs: Double, rhs: Double) -> Double {
         switch self {
         case .add:
-            return "+"
+            return Self.add(lhs, rhs)
         case .subtract:
-            return "−"
+            return Self.subtract(lhs, rhs)
         case .multiply:
-            return "×"
+            return Self.multiply(lhs, rhs)
         case .divide:
-            return "÷"
+            return Self.divide(lhs, rhs)
         }
+    }
+
+    private static func add(_ lhs: Double, _ rhs: Double) -> Double {
+        return lhs + rhs
+    }
+
+    private static func subtract(_ lhs: Double, _ rhs: Double) -> Double {
+        return lhs - rhs
+    }
+
+    private static func multiply(_ lhs: Double, _ rhs: Double) -> Double {
+        return lhs * rhs
+    }
+
+    private static func divide(_ lhs: Double, _ rhs: Double) -> Double {
+        return lhs / rhs
     }
 }
