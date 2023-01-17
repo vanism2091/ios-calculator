@@ -7,8 +7,6 @@
 
 import Foundation
 
-protocol CalculateItem {}
-
 struct CalculatorItemQueue {
     var items: [CalculateItem] = []
 
