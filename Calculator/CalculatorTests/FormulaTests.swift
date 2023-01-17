@@ -28,4 +28,16 @@ final class FormulaTests: XCTestCase {
         XCTAssertEqual(sut.result(), 0.0)
     }
 
+    func test_operands가_1_2이고_operator가_add일때_result는_3이다() throws {
+        let operand1 = 1.0
+        let operand2 = 2.0
+        sut.operands.enqueue(item: operand1)
+        sut.operands.enqueue(item: operand2)
+
+        let operator1 = Operator.add
+        sut.operators.enqueue(item: operator1)
+
+        XCTAssertEqual(sut.result(), 3.0)
+    }
+
 }
