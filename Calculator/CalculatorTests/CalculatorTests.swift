@@ -25,9 +25,9 @@ final class CalculatorTests: XCTestCase {
     }
 
     func test_operator를_넣으면_empty가_아니다() throws {
-        let op = Operator()
+        let addOperator = Operator.add
 
-        sut.enqueue(op)
+        sut.enqueue(item: addOperator)
 
         XCTAssertFalse(sut.isEmpty)
     }
