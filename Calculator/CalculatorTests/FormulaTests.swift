@@ -49,4 +49,16 @@ final class FormulaTests: XCTestCase {
     func test_Formula가_비어있을때_result호출시_에러() throws {
         XCTAssertThrowsError(try sut.result())
     }
+
+    func test_0으로_나눌때_에러() throws {
+        let operand1 = 1.0
+        let operand2 = 0.0
+        sut.operands.enqueue(item: operand1)
+        sut.operands.enqueue(item: operand2)
+
+        let operator1 = Operator.divide
+        sut.operators.enqueue(item: operator1)
+
+        XCTAssertThrowsError(try sut.result())
+    }
 }
