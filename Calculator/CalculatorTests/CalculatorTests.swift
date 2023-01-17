@@ -46,4 +46,18 @@ final class CalculatorTests: XCTestCase {
         XCTAssertNil(sut.dequeue())
     }
 
+    func test_Queue에_3개_enqueue_후_removeAll하면_isEmpty는_true() throws {
+        let addOperator1 = Operator.add
+        let addOperator2 = Operator.add
+        let addOperator3 = Operator.add
+
+        sut.enqueue(item: addOperator1)
+        sut.enqueue(item: addOperator2)
+        sut.enqueue(item: addOperator3)
+
+        sut.removeAll()
+
+        XCTAssertTrue(sut.isEmpty)
+    }
+
 }
