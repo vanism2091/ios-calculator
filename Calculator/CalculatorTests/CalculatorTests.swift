@@ -24,4 +24,12 @@ final class CalculatorTests: XCTestCase {
         XCTAssertTrue(sut.isEmpty)
     }
 
+    func test_operator를_넣으면_empty가_아니다() throws {
+        let op = Operator()
+
+        sut.enqueue(op)
+
+        XCTAssertFalse(sut.isEmpty)
+    }
+
 }
