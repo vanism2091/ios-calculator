@@ -60,4 +60,12 @@ final class CalculatorTests: XCTestCase {
         XCTAssertTrue(sut.isEmpty)
     }
 
+    func test_Queue에_Double도_넣을_수_있음() throws {
+        let doubleItem1 = 123.456
+
+        sut.enqueue(item: doubleItem1)
+
+        XCTAssertFalse(sut.isEmpty)
+    }
+
 }
