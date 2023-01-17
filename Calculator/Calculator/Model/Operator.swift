@@ -13,3 +13,18 @@ enum Operator: CalculateItem {
     case multiply
     case divide
 }
+
+extension Operator: CustomStringConvertible {
+    var description: String {
+        switch self {
+        case .add:
+            return "+"
+        case .subtract:
+            return "−"
+        case .multiply:
+            return "×"
+        case .divide:
+            return "÷"
+        }
+    }
+}
