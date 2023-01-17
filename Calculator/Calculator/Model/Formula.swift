@@ -25,7 +25,9 @@ struct Formula {
               let operator1 = operators.items[0] as? Operator else {
             return 0.0
         }
-
+        guard (0.0, Operator.divide) != (operandsArray[1], operator1) else {
+            throw FormulaError.dividedByZero
+        }
         return operator1.calculate(lhs: operandsArray[0], rhs: operandsArray[1])
     }
 }

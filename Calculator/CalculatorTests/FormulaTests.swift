@@ -59,6 +59,24 @@ final class FormulaTests: XCTestCase {
         let operator1 = Operator.divide
         sut.operators.enqueue(item: operator1)
 
-        XCTAssertThrowsError(try sut.result())
+        do {
+            let result = try sut.result()
+            XCTAssertThrowsError(result)
+        } catch let error as FormulaError {
+            XCTAssertEqual(error, .dividedByZero)
+        }
     }
+
+    func test_0으로_뺄때_에러아님() throws {
+        let operand1 = 1.0
+        let operand2 = 0.0
+        sut.operands.enqueue(item: operand1)
+        sut.operands.enqueue(item: operand2)
+
+        let operator1 = Operator.subtract
+        sut.operators.enqueue(item: operator1)
+
+        XCTAssertNoThrow(try sut.result())
+    }
+
 }
