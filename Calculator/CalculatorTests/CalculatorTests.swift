@@ -42,4 +42,8 @@ final class CalculatorTests: XCTestCase {
         XCTAssertTrue(sut.isEmpty)
     }
 
+    func test_빈_queue에서_deque하면_nil이_반환된다() throws {
+        XCTAssertNil(sut.dequeue())
+    }
+
 }
