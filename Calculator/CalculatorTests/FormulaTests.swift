@@ -25,7 +25,7 @@ final class FormulaTests: XCTestCase {
     }
 
     func test_Formula가_비어있을때_result는_0이다() throws {
-        XCTAssertEqual(sut.result(), 0.0)
+        XCTAssertEqual(try? sut.result(), 0.0)
     }
 
     func test_operands가_1_2이고_operator가_add일때_result는_3이다() throws {
@@ -37,7 +37,16 @@ final class FormulaTests: XCTestCase {
         let operator1 = Operator.add
         sut.operators.enqueue(item: operator1)
 
-        XCTAssertEqual(sut.result(), 3.0)
+        XCTAssertEqual(try? sut.result(), 3.0)
     }
 
+    func test_Formula의_operands가_operator_보다_1개_많지_않으면_에러() throws {
+        let operand1 = 1.0
+        sut.operands.enqueue(item: operand1)
+
+        let operator1 = Operator.add
+        sut.operators.enqueue(item: operator1)
+
+        XCTAssertThrowsError(try sut.result())
+    }
 }
