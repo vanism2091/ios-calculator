@@ -17,17 +17,20 @@ struct Formula {
     var operators = CalculatorItemQueue()
 
     func result() throws -> Double {
-        guard operands.count == operators.count + 1 else {
+        guard operands.count == operators.count + 1,
+              let operands = operands.items as? [Double],
+              let operators = operators.items as? [Operator] else {
             throw FormulaError.wrongFormula
         }
 
-        guard let operandsArray = operands.items as? [Double],
-              let operator1 = operators.items[0] as? Operator else {
-            return 0.0
+        let result = try zip(operands.dropFirst(), operators).reduce(operands[0]) { (partialResult, arg1) in
+            let (number, `operator`) = arg1
+            guard (0.0, Operator.divide) != (number, `operator`) else {
+                throw FormulaError.dividedByZero
+            }
+            return `operator`.calculate(lhs: partialResult, rhs: number)
         }
-        guard (0.0, Operator.divide) != (operandsArray[1], operator1) else {
-            throw FormulaError.dividedByZero
-        }
-        return operator1.calculate(lhs: operandsArray[0], rhs: operandsArray[1])
+
+        return result
     }
 }
