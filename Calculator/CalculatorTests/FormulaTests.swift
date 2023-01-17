@@ -79,4 +79,18 @@ final class FormulaTests: XCTestCase {
         XCTAssertNoThrow(try sut.result())
     }
 
+    func test_operands_6개_operator_5개_result() throws {
+        let operands = [1.0, 2.0, 3.0, 2.0, 3.0, 6.0]
+        operands.forEach { number in
+            sut.operands.enqueue(item: number)
+        }
+
+        let operators: [Operator] = [.add, .subtract, .multiply, .subtract, .divide]
+        operators.forEach { `operator` in
+            sut.operators.enqueue(item: `operator`)
+        }
+
+        XCTAssertEqual(try? sut.result(), -0.5)
+    }
+
 }
