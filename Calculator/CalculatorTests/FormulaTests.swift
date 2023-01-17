@@ -24,4 +24,8 @@ final class FormulaTests: XCTestCase {
         XCTAssertTrue(sut.operators.isEmpty)
     }
 
+    func test_Formula가_비어있을때_result는_0이다() throws {
+        XCTAssertEqual(sut.result(), 0.0)
+    }
+
 }
