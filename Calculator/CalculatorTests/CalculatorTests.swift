@@ -37,7 +37,7 @@ final class CalculatorTests: XCTestCase {
 
         sut.enqueue(item: addOperator)
 
-        sut.dequeue()
+        _ = sut.dequeue()
 
         XCTAssertTrue(sut.isEmpty)
     }
