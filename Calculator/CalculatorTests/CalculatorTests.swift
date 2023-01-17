@@ -68,4 +68,27 @@ final class CalculatorTests: XCTestCase {
         XCTAssertFalse(sut.isEmpty)
     }
 
+    func test_Operator_subtract를_enqueue하면_isEmpty는_false이다() {
+        let subtractOperator = Operator.subtract
+
+        sut.enqueue(item: subtractOperator)
+
+        XCTAssertFalse(sut.isEmpty)
+    }
+
+    func test_Operator_multiply를_enqueue하면_isEmpty는_false이다() {
+        let multiplyOperator = Operator.multiply
+
+        sut.enqueue(item: multiplyOperator)
+
+        XCTAssertFalse(sut.isEmpty)
+    }
+
+    func test_Operator_divide를_enqueue하면_isEmpty는_false이다() {
+        let divideOperator = Operator.divide
+
+        sut.enqueue(item: divideOperator)
+
+        XCTAssertFalse(sut.isEmpty)
+    }
 }
