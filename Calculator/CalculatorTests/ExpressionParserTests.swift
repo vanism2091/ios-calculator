@@ -16,4 +16,25 @@ final class ExpressionParserTests: XCTestCase {
         XCTAssertTrue(formula.operators.isEmpty)
     }
 
+    func test_parse에_3더하기4_넣으면_Operands에_3_4_Operators에_더하기_있다() {
+        var formula = ExpressionParser.parse(from: "3\(Operator.add.rawValue)4")
+
+        guard let currentOperator = formula.operators.dequeue() as? Operator else {
+            XCTFail("operator가 아님")
+            return
+        }
+        XCTAssertTrue(currentOperator.rawValue == Operator.add.rawValue
+        )
+        XCTAssertTrue(formula.operators.isEmpty)
+
+        guard let num1 = formula.operands.dequeue() as? Double,
+              let num2 = formula.operands.dequeue() as? Double else {
+            XCTFail("double이 아님")
+            return
+        }
+        XCTAssertTrue(num1 == 3.0)
+        XCTAssertTrue(num2 == 4.0)
+        XCTAssertTrue(formula.operands.isEmpty)
+
+    }
 }
