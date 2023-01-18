@@ -16,6 +16,17 @@ struct Formula {
     var operands = CalculatorItemQueue()
     var operators = CalculatorItemQueue()
 
+    init() { }
+
+    init(operands: [Double], operators: [Operator]) {
+        operands.forEach {
+            self.operands.enqueue(item: $0)
+        }
+        operators.forEach {
+            self.operators.enqueue(item: $0)
+        }
+    }
+
     func result() throws -> Double {
         guard operands.count == operators.count + 1,
               let operands = operands.items as? [Double],

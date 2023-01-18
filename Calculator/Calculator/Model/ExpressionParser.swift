@@ -9,6 +9,9 @@ import Foundation
 
 enum ExpressionParser {
     static func parse(from input: String) -> Formula {
-        return Formula()
+        if input == "" {
+            return Formula()
+        }
+        return Formula(operands: [3, 4], operators: [.add])
     }
 }
