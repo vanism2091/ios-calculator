@@ -93,4 +93,17 @@ final class FormulaTests: XCTestCase {
         XCTAssertEqual(try? sut.result(), -0.5)
     }
 
+    func test_0으로_나눌때_에러_인자가_많은_경우() throws {
+        let operands = [1.0, 0.0, 3.0, 4.0, 5.0]
+        let operators: [Operator] = [.divide, .add, .multiply, .subtract]
+        sut = Formula(operands: operands, operators: operators)
+
+        do {
+            let result = try sut.result()
+            XCTAssertThrowsError(result)
+        } catch let error as FormulaError {
+            XCTAssertEqual(error, .dividedByZero)
+        }
+    }
+
 }

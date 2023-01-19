@@ -34,14 +34,15 @@ struct Formula {
             throw FormulaError.wrongFormula
         }
 
-        let result = try zip(operands.dropFirst(), operators).reduce(operands[0]) { (partialResult, arg1) in
-            let (number, `operator`) = arg1
-            guard (0.0, Operator.divide) != (number, `operator`) else {
-                throw FormulaError.dividedByZero
-            }
-            return `operator`.calculate(lhs: partialResult, rhs: number)
+        let pairs = zip(operands.dropFirst(), operators)
+        guard false == pairs.contains(where: { pair in (0.0, Operator.divide) == pair }) else {
+            throw FormulaError.dividedByZero
         }
 
+        let result = pairs.reduce(operands[0]) { (partialResult, pair) in
+            let (currentOperand, currentOperator) = pair
+            return currentOperator.calculate(lhs: partialResult, rhs: currentOperand)
+        }
         return result
     }
 }
