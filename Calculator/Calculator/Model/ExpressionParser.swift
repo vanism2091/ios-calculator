@@ -14,4 +14,11 @@ enum ExpressionParser {
         }
         return Formula(operands: [3, 4], operators: [.add])
     }
+
+    static func componentsByOperators(from input: String) -> [String] {
+        let result = Operator.allCases.reduce([input]) { (partialResult, currentOperator) in
+            return partialResult.flatMap { $0.split(with: currentOperator.rawValue )}
+        }
+        return result
+    }
 }

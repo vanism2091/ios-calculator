@@ -37,4 +37,18 @@ final class ExpressionParserTests: XCTestCase {
         XCTAssertTrue(formula.operands.isEmpty)
 
     }
+
+    func test_모든연산자기준으로_양의정수를_split한다() throws {
+        let given = "2+3−4×5×6÷3"
+        let result = ExpressionParser.componentsByOperators(from: given)
+        let expected = ["2", "+", "3", "−", "4", "×", "5", "×", "6", "÷", "3"]
+        XCTAssertEqual(result, expected)
+    }
+
+    func test_모든연산자기준으로_음의정수를_split한다() throws {
+        let given = "-2+-3−-4×-5×-6÷-3"
+        let result = ExpressionParser.componentsByOperators(from: given)
+        let expected = ["-2", "+", "-3", "−", "-4", "×", "-5", "×", "-6", "÷", "-3"]
+        XCTAssertEqual(result, expected)
+    }
 }
