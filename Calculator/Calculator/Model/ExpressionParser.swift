@@ -9,10 +9,10 @@ import Foundation
 
 enum ExpressionParser {
     static func parse(from input: String) -> Formula {
-        if input == "" {
-            return Formula()
-        }
-        return Formula(operands: [3, 4], operators: [.add])
+        let items = componentsByOperators(from: input)
+        let operands = items.compactMap { Double($0) }
+        let operators = items.compactMap { $0.count == 1 ? Operator(rawValue: Character($0)) : nil }
+        return Formula(operands: operands, operators: operators)
     }
 
     static func componentsByOperators(from input: String) -> [String] {

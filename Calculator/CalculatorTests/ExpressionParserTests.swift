@@ -51,4 +51,21 @@ final class ExpressionParserTests: XCTestCase {
         let expected = ["-2", "+", "-3", "−", "-4", "×", "-5", "×", "-6", "÷", "-3"]
         XCTAssertEqual(result, expected)
     }
+
+    func test_parse로_반환된_Formula에_operators_operands가_제대로_분리되었다() throws {
+        let given = "10.1+12.5÷127+8−100×13.8"
+        var formula = ExpressionParser.parse(from: given)
+        let operands: [Double] = [10.1, 12.5, 127, 8, 100, 13.8]
+        let operators: [Operator] = [.add, .divide, .add, .subtract, .multiply]
+        let expected = Formula(operands: operands, operators: operators)
+
+        for index in 0..<formula.operators.count {
+            let dequed = formula.operators.dequeue() as? Operator
+            XCTAssertEqual(operators[index], dequed)
+        }
+        for index in 0..<formula.operands.count {
+            let dequed = formula.operands.dequeue() as? Double
+            XCTAssertEqual(operands[index], dequed)
+        }
+    }
 }
