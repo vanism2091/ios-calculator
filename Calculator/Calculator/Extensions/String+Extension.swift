@@ -10,6 +10,8 @@ import Foundation
 extension String {
     func split(with target: Character) -> [String] {
         let separator = String(target)
+        guard self.contains(target) else { return [self] }
+
         return self.components(separatedBy: separator)
             .flatMap { [$0, separator] }
             .dropLast()
