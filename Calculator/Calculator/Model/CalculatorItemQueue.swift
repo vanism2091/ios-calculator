@@ -7,8 +7,8 @@
 
 import Foundation
 
-struct CalculatorItemQueue<Element: CalculateItem> {
-    private(set) var items: [Element] = []
+struct CalculatorItemQueue<Element: CalculateItem>: CalculatorItemQueueProtocol {
+    private var items: [Element] = []
 
     var isEmpty: Bool {
         items.isEmpty
@@ -18,18 +18,24 @@ struct CalculatorItemQueue<Element: CalculateItem> {
         items.count
     }
 
+    var values: [Element] {
+        items
+    }
+
+    init(items: [Element]) {
+        items.forEach { element in
+            self.enqueue(item: element)
+        }
+    }
+
     mutating func enqueue(item: Element) {
         items.append(item)
     }
 
     mutating func dequeue() -> Element? {
-        guard false == items.isEmpty else {
+        guard false == isEmpty else {
             return nil
         }
         return items.removeFirst()
-    }
-
-    mutating func removeAll() {
-        items.removeAll()
     }
 }

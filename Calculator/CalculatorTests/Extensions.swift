@@ -16,6 +16,6 @@ extension Formula: Equatable {
 
 extension CalculatorItemQueue where Element: Equatable {
     public static func == (lhs: Self, rhs: Self) -> Bool {
-        return lhs.items == rhs.items
+        return lhs.values == rhs.values
     }
 }

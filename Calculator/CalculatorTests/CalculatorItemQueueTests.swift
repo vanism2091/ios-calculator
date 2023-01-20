@@ -14,8 +14,8 @@ final class CalculatorItemQueueTests: XCTestCase {
     var operatorSut: CalculatorItemQueue<Operator>!
 
     override func setUpWithError() throws {
-        doubleSut = CalculatorItemQueue<Double>()
-        operatorSut = CalculatorItemQueue<Operator>()
+        doubleSut = CalculatorItemQueue<Double>(items: [])
+        operatorSut = CalculatorItemQueue<Operator>(items: [])
     }
 
     override func tearDownWithError() throws {
@@ -47,13 +47,6 @@ final class CalculatorItemQueueTests: XCTestCase {
 
     func test_빈_queue에서_deque하면_nil이_반환된다() throws {
         XCTAssertNil(operatorSut.dequeue())
-    }
-
-    func test_Queue에_3개_enqueue_후_removeAll하면_isEmpty는_true() throws {
-        operatorSut = CalculatorItemQueue<Operator>(items: [.add, .add, .add])
-        operatorSut.removeAll()
-
-        XCTAssertTrue(operatorSut.isEmpty)
     }
 
     func test_Queue에_Double도_넣을_수_있음() throws {
