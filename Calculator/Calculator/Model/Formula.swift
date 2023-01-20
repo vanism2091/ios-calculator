@@ -13,33 +13,25 @@ enum FormulaError: Error {
 }
 
 struct Formula {
-    var operands = CalculatorItemQueue()
-    var operators = CalculatorItemQueue()
+    var operands: CalculatorItemQueue<Double>
+    var operators: CalculatorItemQueue<Operator>
 
-    init() { }
-
-    init(operands: [Double], operators: [Operator]) {
-        operands.forEach {
-            self.operands.enqueue(item: $0)
-        }
-        operators.forEach {
-            self.operators.enqueue(item: $0)
-        }
+    init(operands: [Double] = [], operators: [Operator] = []) {
+        self.operands = CalculatorItemQueue(items: operands)
+        self.operators = CalculatorItemQueue(items: operators)
     }
 
     func result() throws -> Double {
-        guard operands.count == operators.count + 1,
-              let operands = operands.items as? [Double],
-              let operators = operators.items as? [Operator] else {
+        guard operands.count == operators.count + 1 else {
             throw FormulaError.wrongFormula
         }
 
-        let pairs = zip(operands.dropFirst(), operators)
+        let pairs = zip(operands.items.dropFirst(), operators.items)
         guard false == pairs.contains(where: { pair in (0.0, Operator.divide) == pair }) else {
             throw FormulaError.dividedByZero
         }
 
-        let result = pairs.reduce(operands[0]) { (partialResult, pair) in
+        let result = pairs.reduce(operands.items[0]) { (partialResult, pair) in
             let (currentOperand, currentOperator) = pair
             return currentOperator.calculate(lhs: partialResult, rhs: currentOperand)
         }

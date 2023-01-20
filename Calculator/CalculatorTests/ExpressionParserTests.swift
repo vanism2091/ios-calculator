@@ -12,14 +12,13 @@ final class ExpressionParserTests: XCTestCase {
     func test_parse에_빈문자열을_넣으면_빈_Formula를_반환한다() throws {
         let formula: Formula = ExpressionParser.parse(from: "")
 
-        XCTAssertTrue(formula.operands.isEmpty)
-        XCTAssertTrue(formula.operators.isEmpty)
+        XCTAssertEqual(formula, Formula())
     }
 
     func test_parse에_3더하기4_넣으면_Operands에_3_4_Operators에_더하기_있다() {
         var formula = ExpressionParser.parse(from: "3\(Operator.add.rawValue)4")
 
-        guard let currentOperator = formula.operators.dequeue() as? Operator else {
+        guard let currentOperator = formula.operators.dequeue() else {
             XCTFail("operator가 아님")
             return
         }
@@ -27,8 +26,8 @@ final class ExpressionParserTests: XCTestCase {
         )
         XCTAssertTrue(formula.operators.isEmpty)
 
-        guard let num1 = formula.operands.dequeue() as? Double,
-              let num2 = formula.operands.dequeue() as? Double else {
+        guard let num1 = formula.operands.dequeue(),
+              let num2 = formula.operands.dequeue() else {
             XCTFail("double이 아님")
             return
         }
@@ -57,15 +56,25 @@ final class ExpressionParserTests: XCTestCase {
         var formula = ExpressionParser.parse(from: given)
         let operands: [Double] = [10.1, 12.5, 127, 8, 100, 13.8]
         let operators: [Operator] = [.add, .divide, .add, .subtract, .multiply]
-        let expected = Formula(operands: operands, operators: operators)
+        _ = Formula(operands: operands, operators: operators)
 
         for index in 0..<formula.operators.count {
-            let dequed = formula.operators.dequeue() as? Operator
+            let dequed = formula.operators.dequeue()
             XCTAssertEqual(operators[index], dequed)
         }
         for index in 0..<formula.operands.count {
-            let dequed = formula.operands.dequeue() as? Double
+            let dequed = formula.operands.dequeue()
             XCTAssertEqual(operands[index], dequed)
         }
+    }
+
+    func test_parse로_반환된_Formula에_operators_operands가_제대로_분리되었다2() throws {
+        let given = "10.1+12.5÷127+8−100×13.8"
+        let formula = ExpressionParser.parse(from: given)
+        let operands: [Double] = [10.1, 12.5, 127, 8, 100, 13.8]
+        let operators: [Operator] = [.add, .divide, .add, .subtract, .multiply]
+        let expected = Formula(operands: operands, operators: operators)
+
+        XCTAssertEqual(formula, expected)
     }
 }

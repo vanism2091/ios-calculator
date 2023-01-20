@@ -10,85 +10,66 @@ import XCTest
 
 final class CalculatorItemQueueTests: XCTestCase {
 
-    var sut: CalculatorItemQueue!
+    var doubleSut: CalculatorItemQueue<Double>!
+    var operatorSut: CalculatorItemQueue<Operator>!
 
     override func setUpWithError() throws {
-        sut = CalculatorItemQueue()
+        doubleSut = CalculatorItemQueue<Double>()
+        operatorSut = CalculatorItemQueue<Operator>()
     }
 
     override func tearDownWithError() throws {
-        sut = nil
+        doubleSut = nil
+        operatorSut = nil
     }
 
     func test_초기화했을때_isEmpty_true() throws {
-        XCTAssertTrue(sut.isEmpty)
+        XCTAssertTrue(doubleSut.isEmpty)
     }
 
     func test_operator를_넣으면_empty가_아니다() throws {
         let addOperator = Operator.add
 
-        sut.enqueue(item: addOperator)
+        operatorSut.enqueue(item: addOperator)
 
-        XCTAssertFalse(sut.isEmpty)
+        XCTAssertFalse(operatorSut.isEmpty)
     }
 
     func test_Operator_add를_enqueue하고_dequeue하면_isEmpty는_true이다() throws {
         let addOperator = Operator.add
 
-        sut.enqueue(item: addOperator)
+        operatorSut.enqueue(item: addOperator)
 
-        _ = sut.dequeue()
+        _ = operatorSut.dequeue()
 
-        XCTAssertTrue(sut.isEmpty)
+        XCTAssertTrue(operatorSut.isEmpty)
     }
 
     func test_빈_queue에서_deque하면_nil이_반환된다() throws {
-        XCTAssertNil(sut.dequeue())
+        XCTAssertNil(operatorSut.dequeue())
     }
 
     func test_Queue에_3개_enqueue_후_removeAll하면_isEmpty는_true() throws {
-        let addOperator1 = Operator.add
-        let addOperator2 = Operator.add
-        let addOperator3 = Operator.add
+        operatorSut = CalculatorItemQueue<Operator>(items: [.add, .add, .add])
+        operatorSut.removeAll()
 
-        sut.enqueue(item: addOperator1)
-        sut.enqueue(item: addOperator2)
-        sut.enqueue(item: addOperator3)
-
-        sut.removeAll()
-
-        XCTAssertTrue(sut.isEmpty)
+        XCTAssertTrue(operatorSut.isEmpty)
     }
 
     func test_Queue에_Double도_넣을_수_있음() throws {
         let doubleItem1 = 123.456
 
-        sut.enqueue(item: doubleItem1)
+        doubleSut.enqueue(item: doubleItem1)
 
-        XCTAssertFalse(sut.isEmpty)
+        XCTAssertFalse(doubleSut.isEmpty)
     }
 
     func test_Operator_subtract를_enqueue하면_isEmpty는_false이다() {
         let subtractOperator = Operator.subtract
 
-        sut.enqueue(item: subtractOperator)
+        operatorSut.enqueue(item: subtractOperator)
 
-        XCTAssertFalse(sut.isEmpty)
+        XCTAssertFalse(operatorSut.isEmpty)
     }
 
-    func test_Operator_multiply를_enqueue하면_isEmpty는_false이다() {
-        let multiplyOperator = Operator.multiply
-
-        sut.enqueue(item: multiplyOperator)
-
-        XCTAssertFalse(sut.isEmpty)
-    }
-
-    func test_Operator_divide를_enqueue하면_isEmpty는_false이다() {
-        let divideOperator = Operator.divide
-
-        sut.enqueue(item: divideOperator)
-
-        XCTAssertFalse(sut.isEmpty)
-    }
 }
