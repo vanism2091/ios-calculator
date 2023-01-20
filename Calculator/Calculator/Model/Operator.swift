@@ -12,6 +12,12 @@ enum Operator: Character, CalculateItem, CaseIterable {
     case subtract = "−"
     case multiply = "×"
     case divide = "÷"
+
+    init?(_ input: String) {
+        guard input.count == 1 else { return nil }
+        guard let value = Operator(rawValue: Character(input)) else { return nil }
+        self = value
+    }
 }
 
 extension Operator {

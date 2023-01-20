@@ -11,7 +11,7 @@ enum ExpressionParser {
     static func parse(from input: String) -> Formula {
         let items = componentsByOperators(from: input)
         let operands = items.compactMap { Double($0) }
-        let operators = items.compactMap { $0.count == 1 ? Operator(rawValue: Character($0)) : nil }
+        let operators = items.compactMap { Operator($0) }
         return Formula(operands: operands, operators: operators)
     }
 
