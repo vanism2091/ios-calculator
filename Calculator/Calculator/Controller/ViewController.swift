@@ -7,6 +7,10 @@
 import UIKit
 
 class ViewController: UIViewController {
+
+    @IBOutlet weak var operationLabel: UILabel!
+    @IBOutlet weak var currentNumberLabel: UILabel!
+
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -17,7 +21,7 @@ class ViewController: UIViewController {
     }
 
     @IBAction func arithmeticOperatorDidTap(_ sender: UIButton) {
-        print(sender.currentTitle ?? "사칙연산")
+        operationLabel.text = sender.currentTitle
     }
 
     @IBAction func equalsDidTap(_ sender: UIButton) {
