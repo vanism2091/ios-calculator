@@ -17,7 +17,13 @@ class ViewController: UIViewController {
     }
 
     @IBAction func digitDidTap(_ sender: UIButton) {
-        print(sender.currentTitle ?? "-")
+        guard let digit = sender.currentTitle,
+              let label = currentNumberLabel.text else { return }
+        if currentNumberLabel.text == "0" {
+            currentNumberLabel.text = digit
+        } else if label.count < 20 {
+            currentNumberLabel.text?.append(digit)
+        }
     }
 
     @IBAction func arithmeticOperatorDidTap(_ sender: UIButton) {
