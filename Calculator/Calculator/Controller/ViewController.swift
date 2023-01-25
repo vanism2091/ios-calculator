@@ -13,7 +13,7 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        initializeCurrentDisplay()
     }
 
     @IBAction func digitDidTap(_ sender: UIButton) {
@@ -35,9 +35,13 @@ class ViewController: UIViewController {
     }
 
     @IBAction func clearDidTap(_ sender: UIButton) {
-        print(sender.currentTitle ?? "c")
+        initializeCurrentDisplay()
+        if sender.currentTitle == "AC" {
+            // clear history
+        }
     }
 
+    // TODO: - Int 말고 Double
     @IBAction func signToggleDidTap(_ sender: UIButton) {
         guard nil != sender.currentTitle,
               let currentNumberString = currentNumberLabel.text,
@@ -47,5 +51,10 @@ class ViewController: UIViewController {
 
     @IBAction func zeroOrPointDidTap(_ sender: UIButton) {
         print(sender.currentTitle ?? "00.")
+    }
+
+    private func initializeCurrentDisplay() {
+        operationLabel.text = nil
+        currentNumberLabel.text = "0"
     }
 }
