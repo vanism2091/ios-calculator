@@ -39,7 +39,10 @@ class ViewController: UIViewController {
     }
 
     @IBAction func signToggleDidTap(_ sender: UIButton) {
-        print(sender.currentTitle ?? "+-")
+        guard nil != sender.currentTitle,
+              let currentNumberString = currentNumberLabel.text,
+              let currentNumber = Int(currentNumberString) else { return }
+        currentNumberLabel.text = String(currentNumber * -1)
     }
 
     @IBAction func zeroOrPointDidTap(_ sender: UIButton) {
