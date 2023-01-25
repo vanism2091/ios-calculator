@@ -8,8 +8,6 @@
 import XCTest
 @testable import Calculator
 
-let expected = ["+", "−", "×", "÷"]
-
 final class CalculatorModelTests: XCTestCase {
     func test_통합테스트1() throws {
         let result = try? ExpressionParser.parse(from: "10.1+12.5÷127+8−100×13.8").result()
