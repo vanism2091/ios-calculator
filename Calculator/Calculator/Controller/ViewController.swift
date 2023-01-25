@@ -10,6 +10,10 @@ class ViewController: UIViewController {
 
     @IBOutlet weak var operationLabel: UILabel!
     @IBOutlet weak var currentNumberLabel: UILabel!
+    @IBOutlet weak var calculationHistoryScrollView: UIScrollView!
+    @IBOutlet weak var calculationHistoryContentView: UIStackView!
+
+    private var isNumberTyped: Bool = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,15 +23,22 @@ class ViewController: UIViewController {
     @IBAction func digitDidTap(_ sender: UIButton) {
         guard let digit = sender.currentTitle,
               let label = currentNumberLabel.text else { return }
-        if currentNumberLabel.text == "0" {
+        if isNumberTyped {
             currentNumberLabel.text = digit
         } else if label.count < 20 {
             currentNumberLabel.text?.append(digit)
         }
+        isNumberTyped = true
     }
 
     @IBAction func arithmeticOperatorDidTap(_ sender: UIButton) {
+        if isNumberTyped,
+           let currentOperator = operationLabel.text,
+           let currentNumber = currentNumberLabel.text {
+            buildCalculationHistoryStack(operator: currentOperator, number: currentNumber)
+        }
         operationLabel.text = sender.currentTitle
+        initializeNumberLabel()
     }
 
     @IBAction func equalsDidTap(_ sender: UIButton) {
@@ -55,11 +66,12 @@ class ViewController: UIViewController {
               currentNumber.count < 20 else { return }
 
         switch buttonName {
-        case "0":
-            guard currentNumber != "0" else { return }
-            currentNumberLabel.text?.append(buttonName)
-        case "00":
-            guard currentNumber != "0" else { return }
+        case "0", "00":
+            guard isNumberTyped else {
+                isNumberTyped = true
+                return
+            }
+            guard currentNumberLabel.text != "0" else { return }
             currentNumberLabel.text?.append(buttonName)
             if let number = currentNumberLabel.text, number.count > 20 {
                 currentNumberLabel.text?.removeLast()
@@ -70,10 +82,36 @@ class ViewController: UIViewController {
         default:
             return
         }
+        isNumberTyped = true
     }
 
     private func initializeCurrentDisplay() {
         operationLabel.text = nil
+        initializeNumberLabel()
+    }
+
+    private func initializeNumberLabel() {
         currentNumberLabel.text = "0"
+        isNumberTyped = false
+    }
+
+    private func buildCalculationHistoryStack(operator oper: String?, number: String) {
+        let stackView = UIStackView()
+        stackView.spacing = 8
+        let operatorLabel = buildDisplayLabel(text: oper)
+        let numberLabel = buildDisplayLabel(text: number)
+
+        stackView.addArrangedSubview(operatorLabel)
+        stackView.addArrangedSubview(numberLabel)
+
+        calculationHistoryContentView.addArrangedSubview(stackView)
+        calculationHistoryScrollView.setContentOffset(CGPoint(x: 0, y: calculationHistoryScrollView.contentSize.height - calculationHistoryScrollView.bounds.height), animated: true)
+    }
+
+    private func buildDisplayLabel(text: String?) -> UILabel {
+        let label = UILabel()
+        label.text = text
+        label.textColor = .white
+        return label
     }
 }

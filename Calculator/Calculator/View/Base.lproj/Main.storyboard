@@ -363,6 +363,8 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="calculationHistoryContentView" destination="XRe-QE-UJf" id="Nth-Kg-QGD"/>
+                        <outlet property="calculationHistoryScrollView" destination="BOT-7g-vxv" id="Wex-vF-c6f"/>
                         <outlet property="currentNumberLabel" destination="Lwz-OF-XHD" id="iCm-At-PGU"/>
                         <outlet property="operationLabel" destination="HPC-iy-qdm" id="J2t-W9-l8Y"/>
                     </connections>
