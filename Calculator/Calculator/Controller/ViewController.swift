@@ -50,7 +50,26 @@ class ViewController: UIViewController {
     }
 
     @IBAction func zeroOrPointDidTap(_ sender: UIButton) {
-        print(sender.currentTitle ?? "00.")
+        guard let buttonName = sender.currentTitle,
+              let currentNumber = currentNumberLabel.text,
+              currentNumber.count < 20 else { return }
+
+        switch buttonName {
+        case "0":
+            guard currentNumber != "0" else { return }
+            currentNumberLabel.text?.append(buttonName)
+        case "00":
+            guard currentNumber != "0" else { return }
+            currentNumberLabel.text?.append(buttonName)
+            if let number = currentNumberLabel.text, number.count > 20 {
+                currentNumberLabel.text?.removeLast()
+            }
+        case ".":
+            guard false == currentNumberLabel.text?.contains(".") else { return }
+            currentNumberLabel.text?.append(buttonName)
+        default:
+            return
+        }
     }
 
     private func initializeCurrentDisplay() {
