@@ -28,4 +28,11 @@ class ViewController: UIViewController {
         print(sender.currentTitle ?? "c")
     }
 
+    @IBAction func signToggleDidTap(_ sender: UIButton) {
+        print(sender.currentTitle ?? "+-")
+    }
+
+    @IBAction func zeroOrPointDidTap(_ sender: UIButton) {
+        print(sender.currentTitle ?? "00.")
+    }
 }
