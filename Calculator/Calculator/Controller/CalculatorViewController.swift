@@ -23,7 +23,7 @@ final class CalculatorViewController: UIViewController {
     @IBAction func digitDidTap(_ sender: UIButton) {
         guard let digit = sender.currentTitle,
               let label = currentNumberLabel.text else { return }
-        if isNumberTyped {
+        if false == isNumberTyped || currentNumberLabel.text == "0" {
             currentNumberLabel.text = digit
         } else if label.count < 20 {
             currentNumberLabel.text?.append(digit)
@@ -105,7 +105,9 @@ final class CalculatorViewController: UIViewController {
         stackView.addArrangedSubview(numberLabel)
 
         calculationHistoryContentView.addArrangedSubview(stackView)
-        calculationHistoryScrollView.setContentOffset(CGPoint(x: 0, y: calculationHistoryScrollView.contentSize.height - calculationHistoryScrollView.bounds.height), animated: true)
+
+        view.layoutIfNeeded()
+        calculationHistoryScrollView.scrollToBottom()
     }
 
     private func buildDisplayLabel(text: String?) -> UILabel {
