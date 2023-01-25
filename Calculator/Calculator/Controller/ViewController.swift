@@ -16,4 +16,8 @@ class ViewController: UIViewController {
         print(sender.currentTitle ?? "-")
     }
 
+    @IBAction func arithmeticOperatorDidTap(_ sender: UIButton) {
+        print(sender.currentTitle ?? "사칙연산")
+    }
+
 }
