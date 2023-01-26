@@ -1,8 +1,8 @@
 //
 //  Calculator - ViewController.swift
-//  Created by yagom. 
+//  Created by yagom.
 //  Copyright © yagom. All rights reserved.
-// 
+//
 
 import UIKit
 
@@ -22,17 +22,18 @@ final class CalculatorViewController: UIViewController {
     @IBOutlet weak var calculationHistoryContentView: UIStackView!
 
     let maxDigitLength = 20
-
-    var isEntryNumberZeroOnly: Bool {
+    private var isEntryNumberZeroOnly: Bool {
         entryNumberLabel.text == Constant.zero
     }
 
-    private(set) var numberFormatter: NumberFormatter = {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        formatter.maximumFractionDigits = 20
-        return formatter
-    }()
+//    private(set) var numberFormatter: NumberFormatter = {
+//        let formatter = NumberFormatter()
+//        formatter.numberStyle = .decimal
+//        formatter.maximumFractionDigits = 20
+//        return formatter
+//    }()
+
+    private var formulaString = ""
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,22 +45,33 @@ final class CalculatorViewController: UIViewController {
         if isEntryNumberZeroOnly {
             entryNumberLabel.text = digit
         } else if label.count < maxDigitLength {
-            let newDigit = entryNumberLabel.text?.appendingDigit(digit, by: numberFormatter)
-            entryNumberLabel.text = newDigit
+            entryNumberLabel.text?.append(digit)
         }
     }
 
     @IBAction func arithmeticOperatorDidTap(_ sender: UIButton) {
         if false == isEntryNumberZeroOnly,
            let currentNumber = entryNumberLabel.text {
-            appendCalculationHistory(operator: operatorLabel.text, number: currentNumber)
+            let `operator` = formulaString.isEmpty ? nil : operatorLabel.text
+            appendCalculationHistory(operator: `operator`, number: currentNumber)
+            formulaString += "\(`operator` ?? "")\(currentNumber)"
         }
         operatorLabel.text = sender.currentTitle
         clearEntry()
     }
 
     @IBAction func equalsDidTap(_ sender: UIButton) {
-        print(sender.currentTitle ?? "==")
+        if let `operator` = operatorLabel.text, let number = entryNumberLabel.text {
+            let result = calculationResult(from: formulaString + "\(`operator`)\(number)")
+            entryNumberLabel.text = result
+            clearOther()
+        }
+    }
+
+    private func calculationResult(from formula: String) -> String {
+        let result = (try? ExpressionParser.parse(from: formula).result().rounded(.toNearestOrEven)) ?? 0.0
+        print(formula, result)
+        return String(result)
     }
 
     @IBAction func clearDidTap(_ sender: UIButton) {
@@ -122,9 +134,14 @@ extension CalculatorViewController {
         entryNumberLabel.text = Constant.zero
     }
 
-    private func clearAll() {
-        entryNumberLabel.text = Constant.zero
+    private func clearOther() {
         operatorLabel.text = nil
+        formulaString = ""
+    }
+
+    private func clearAll() {
+        clearEntry()
+        clearOther()
         // contentView remove subviews
     }
 }
