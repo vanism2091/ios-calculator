@@ -22,6 +22,9 @@ final class CalculatorViewController: UIViewController {
     @IBOutlet weak var calculationHistoryContentView: UIStackView!
 
     let maxDigitLength = 20
+    var isEntryNumberZeroOnly: Bool {
+        entryNumberLabel.text == Constant.zero
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,7 +34,7 @@ final class CalculatorViewController: UIViewController {
     @IBAction func digitDidTap(_ sender: UIButton) {
         guard let digit = sender.currentTitle,
               let label = entryNumberLabel.text else { return }
-        if entryNumberLabel.text == Constant.zero {
+        if isEntryNumberZeroOnly {
             entryNumberLabel.text = digit
         } else if label.count < maxDigitLength {
             entryNumberLabel.text?.append(digit)
@@ -72,7 +75,7 @@ final class CalculatorViewController: UIViewController {
 
         switch buttonName {
         case Constant.zero, Constant.doubleZero:
-            guard entryNumberLabel.text != Constant.zero else { return }
+            if isEntryNumberZeroOnly { return }
             entryNumberLabel.text?.append(buttonName)
             if let number = entryNumberLabel.text, number.count > maxDigitLength {
                 entryNumberLabel.text?.removeLast()
