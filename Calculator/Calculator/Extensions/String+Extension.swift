@@ -17,4 +17,9 @@ extension String {
             .dropLast()
             .filter { $0 != "" }
     }
+
+    func appendingDigit(_ aString: String, by formatter: NumberFormatter) -> String {
+        let newNumberString = self.replacingOccurrences(of: ",", with: "") + aString
+        return formatter.string(for: Double(newNumberString)) ?? "0"
+    }
 }

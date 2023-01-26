@@ -22,9 +22,17 @@ final class CalculatorViewController: UIViewController {
     @IBOutlet weak var calculationHistoryContentView: UIStackView!
 
     let maxDigitLength = 20
+
     var isEntryNumberZeroOnly: Bool {
         entryNumberLabel.text == Constant.zero
     }
+
+    private(set) var numberFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.maximumFractionDigits = 20
+        return formatter
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,7 +44,8 @@ final class CalculatorViewController: UIViewController {
         if isEntryNumberZeroOnly {
             entryNumberLabel.text = digit
         } else if label.count < maxDigitLength {
-            entryNumberLabel.text?.append(digit)
+            let newDigit = entryNumberLabel.text?.appendingDigit(digit, by: numberFormatter)
+            entryNumberLabel.text = newDigit
         }
     }
 
@@ -118,4 +127,9 @@ extension CalculatorViewController {
         operatorLabel.text = nil
         // contentView remove subviews
     }
+}
+
+// MARK: NumberFormatter
+extension CalculatorViewController {
+//    private func appendingDisplayText()
 }
