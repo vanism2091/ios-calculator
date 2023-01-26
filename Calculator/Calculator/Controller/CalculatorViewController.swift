@@ -41,9 +41,9 @@ final class CalculatorViewController: UIViewController {
     }
 
     @IBAction func arithmeticOperatorDidTap(_ sender: UIButton) {
-        if let currentOperator = operatorLabel.text,
+        if false == isEntryNumberZeroOnly,
            let currentNumber = entryNumberLabel.text {
-            buildCalculationHistoryStack(operator: currentOperator, number: currentNumber)
+            appendCalculationHistory(operator: operatorLabel.text, number: currentNumber)
         }
         operatorLabel.text = sender.currentTitle
         clearEntry()
@@ -91,15 +91,8 @@ final class CalculatorViewController: UIViewController {
         }
     }
 
-    private func buildCalculationHistoryStack(operator oper: String?, number: String) {
-        let stackView = UIStackView()
-        stackView.spacing = 8
-        let operatorLabel = buildDisplayLabel(text: oper)
-        let numberLabel = buildDisplayLabel(text: number)
-
-        stackView.addArrangedSubview(operatorLabel)
-        stackView.addArrangedSubview(numberLabel)
-
+    private func appendCalculationHistory(operator: String?, number: String) {
+        let stackView = HistoryStackView(operator: `operator`, operand: number)
         calculationHistoryContentView.addArrangedSubview(stackView)
 
         view.layoutIfNeeded()
