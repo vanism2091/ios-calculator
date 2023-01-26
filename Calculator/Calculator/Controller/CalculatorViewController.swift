@@ -13,7 +13,7 @@ final class CalculatorViewController: UIViewController {
         static let doubleZero = "00"
         static let dot = "."
         static let allClear = "AC"
-        static let clear = "CE"
+        static let clearEntry = "CE"
     }
 
     @IBOutlet weak var operatorLabel: UILabel!
@@ -28,7 +28,6 @@ final class CalculatorViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        initializeCurrentDisplay()
     }
 
     @IBAction func digitDidTap(_ sender: UIButton) {
@@ -47,7 +46,7 @@ final class CalculatorViewController: UIViewController {
             buildCalculationHistoryStack(operator: currentOperator, number: currentNumber)
         }
         operatorLabel.text = sender.currentTitle
-        initializeNumberLabel()
+        clearEntry()
     }
 
     @IBAction func equalsDidTap(_ sender: UIButton) {
@@ -55,9 +54,13 @@ final class CalculatorViewController: UIViewController {
     }
 
     @IBAction func clearDidTap(_ sender: UIButton) {
-        initializeCurrentDisplay()
-        if sender.currentTitle == "AC" {
-            // clear history
+        switch sender.currentTitle {
+        case Constant.clearEntry:
+            clearEntry()
+        case Constant.allClear:
+            clearAll()
+        default:
+            return
         }
     }
 
@@ -88,15 +91,6 @@ final class CalculatorViewController: UIViewController {
         }
     }
 
-    private func initializeCurrentDisplay() {
-        operatorLabel.text = nil
-        initializeNumberLabel()
-    }
-
-    private func initializeNumberLabel() {
-        entryNumberLabel.text = Constant.zero
-    }
-
     private func buildCalculationHistoryStack(operator oper: String?, number: String) {
         let stackView = UIStackView()
         stackView.spacing = 8
@@ -117,5 +111,18 @@ final class CalculatorViewController: UIViewController {
         label.text = text
         label.textColor = .white
         return label
+    }
+}
+
+// MARK: Clear
+extension CalculatorViewController {
+    private func clearEntry() {
+        entryNumberLabel.text = Constant.zero
+    }
+
+    private func clearAll() {
+        entryNumberLabel.text = Constant.zero
+        operatorLabel.text = nil
+        // contentView remove subviews
     }
 }
