@@ -8,12 +8,12 @@ import UIKit
 
 final class CalculatorViewController: UIViewController {
 
-    @IBOutlet weak var operationLabel: UILabel!
-    @IBOutlet weak var currentNumberLabel: UILabel!
+    @IBOutlet weak var operatorLabel: UILabel!
+    @IBOutlet weak var entryNumberLabel: UILabel!
     @IBOutlet weak var calculationHistoryScrollView: UIScrollView!
     @IBOutlet weak var calculationHistoryContentView: UIStackView!
 
-    private var isNumberTyped: Bool = false
+    let maxDigitLength = 20
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,22 +22,20 @@ final class CalculatorViewController: UIViewController {
 
     @IBAction func digitDidTap(_ sender: UIButton) {
         guard let digit = sender.currentTitle,
-              let label = currentNumberLabel.text else { return }
-        if false == isNumberTyped || currentNumberLabel.text == "0" {
-            currentNumberLabel.text = digit
-        } else if label.count < 20 {
-            currentNumberLabel.text?.append(digit)
+              let label = entryNumberLabel.text else { return }
+        if entryNumberLabel.text == "0" {
+            entryNumberLabel.text = digit
+        } else if label.count < maxDigitLength {
+            entryNumberLabel.text?.append(digit)
         }
-        isNumberTyped = true
     }
 
     @IBAction func arithmeticOperatorDidTap(_ sender: UIButton) {
-        if isNumberTyped,
-           let currentOperator = operationLabel.text,
-           let currentNumber = currentNumberLabel.text {
+        if let currentOperator = operatorLabel.text,
+           let currentNumber = entryNumberLabel.text {
             buildCalculationHistoryStack(operator: currentOperator, number: currentNumber)
         }
-        operationLabel.text = sender.currentTitle
+        operatorLabel.text = sender.currentTitle
         initializeNumberLabel()
     }
 
@@ -55,44 +53,38 @@ final class CalculatorViewController: UIViewController {
     // TODO: - Int 말고 Double
     @IBAction func signToggleDidTap(_ sender: UIButton) {
         guard nil != sender.currentTitle,
-              let currentNumberString = currentNumberLabel.text,
+              let currentNumberString = entryNumberLabel.text,
               let currentNumber = Int(currentNumberString) else { return }
-        currentNumberLabel.text = String(currentNumber * -1)
+        entryNumberLabel.text = String(currentNumber * -1)
     }
 
     @IBAction func zeroOrPointDidTap(_ sender: UIButton) {
         guard let buttonName = sender.currentTitle,
-              let currentNumber = currentNumberLabel.text,
-              currentNumber.count < 20 else { return }
+              let currentNumber = entryNumberLabel.text,
+              currentNumber.count < maxDigitLength else { return }
 
         switch buttonName {
         case "0", "00":
-            guard isNumberTyped else {
-                isNumberTyped = true
-                return
-            }
-            guard currentNumberLabel.text != "0" else { return }
-            currentNumberLabel.text?.append(buttonName)
-            if let number = currentNumberLabel.text, number.count > 20 {
-                currentNumberLabel.text?.removeLast()
+            guard entryNumberLabel.text != "0" else { return }
+            entryNumberLabel.text?.append(buttonName)
+            if let number = entryNumberLabel.text, number.count > maxDigitLength {
+                entryNumberLabel.text?.removeLast()
             }
         case ".":
-            guard false == currentNumberLabel.text?.contains(".") else { return }
-            currentNumberLabel.text?.append(buttonName)
+            guard false == entryNumberLabel.text?.contains(".") else { return }
+            entryNumberLabel.text?.append(buttonName)
         default:
             return
         }
-        isNumberTyped = true
     }
 
     private func initializeCurrentDisplay() {
-        operationLabel.text = nil
+        operatorLabel.text = nil
         initializeNumberLabel()
     }
 
     private func initializeNumberLabel() {
-        currentNumberLabel.text = "0"
-        isNumberTyped = false
+        entryNumberLabel.text = "0"
     }
 
     private func buildCalculationHistoryStack(operator oper: String?, number: String) {
