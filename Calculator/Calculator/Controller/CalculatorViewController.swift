@@ -50,11 +50,10 @@ final class CalculatorViewController: UIViewController {
         }
     }
 
-    // TODO: - Int 말고 Double
     @IBAction func signToggleDidTap(_ sender: UIButton) {
         guard nil != sender.currentTitle,
               let currentNumberString = entryNumberLabel.text,
-              let currentNumber = Int(currentNumberString) else { return }
+              let currentNumber = Double(currentNumberString) else { return }
         entryNumberLabel.text = String(currentNumber * -1)
     }
 
