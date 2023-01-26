@@ -8,6 +8,14 @@ import UIKit
 
 final class CalculatorViewController: UIViewController {
 
+    enum Constant {
+        static let zero = "0"
+        static let doubleZero = "00"
+        static let dot = "."
+        static let allClear = "AC"
+        static let clear = "CE"
+    }
+
     @IBOutlet weak var operatorLabel: UILabel!
     @IBOutlet weak var entryNumberLabel: UILabel!
     @IBOutlet weak var calculationHistoryScrollView: UIScrollView!
@@ -23,7 +31,7 @@ final class CalculatorViewController: UIViewController {
     @IBAction func digitDidTap(_ sender: UIButton) {
         guard let digit = sender.currentTitle,
               let label = entryNumberLabel.text else { return }
-        if entryNumberLabel.text == "0" {
+        if entryNumberLabel.text == Constant.zero {
             entryNumberLabel.text = digit
         } else if label.count < maxDigitLength {
             entryNumberLabel.text?.append(digit)
@@ -63,14 +71,14 @@ final class CalculatorViewController: UIViewController {
               currentNumber.count < maxDigitLength else { return }
 
         switch buttonName {
-        case "0", "00":
-            guard entryNumberLabel.text != "0" else { return }
+        case Constant.zero, Constant.doubleZero:
+            guard entryNumberLabel.text != Constant.zero else { return }
             entryNumberLabel.text?.append(buttonName)
             if let number = entryNumberLabel.text, number.count > maxDigitLength {
                 entryNumberLabel.text?.removeLast()
             }
-        case ".":
-            guard false == entryNumberLabel.text?.contains(".") else { return }
+        case Constant.dot:
+            guard false == entryNumberLabel.text?.contains(Constant.dot) else { return }
             entryNumberLabel.text?.append(buttonName)
         default:
             return
@@ -83,7 +91,7 @@ final class CalculatorViewController: UIViewController {
     }
 
     private func initializeNumberLabel() {
-        entryNumberLabel.text = "0"
+        entryNumberLabel.text = Constant.zero
     }
 
     private func buildCalculationHistoryStack(operator oper: String?, number: String) {
