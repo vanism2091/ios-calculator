@@ -34,7 +34,7 @@ final class CalculatorViewController: UIViewController {
     @IBAction func digitDidTap(_ sender: UIButton) {
         guard let digit = sender.currentTitle,
               let label = entryNumberLabel.text else { return }
-        if isEntryNumberZeroOnly {
+        if isEntryNumberZeroOnly || operatorLabel.text == nil {
             entryNumberLabel.text = digit
         } else if label.count < maxDigitLength {
             entryNumberLabel.text?.append(digit)
