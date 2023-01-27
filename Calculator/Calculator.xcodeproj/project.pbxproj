@@ -10,6 +10,7 @@
 		407CCAC2297A521300E73142 /* CalculatorItemQueueProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 407CCAC1297A521300E73142 /* CalculatorItemQueueProtocol.swift */; };
 		40A385A7297934780030787D /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40A385A6297934780030787D /* Extensions.swift */; };
 		40A49F16297A1DA000208614 /* FormulaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21D83E02976868700E27BCA /* FormulaTests.swift */; };
+		40C5EB5C29836C2000BC49A5 /* UIStackView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C5EB5B29836C2000BC49A5 /* UIStackView+Extension.swift */; };
 		40FF53EE298126AA00C9CA61 /* UIScrollView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40FF53ED298126AA00C9CA61 /* UIScrollView+Extension.swift */; };
 		40FF54142982343000C9CA61 /* HistoryStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40FF54132982343000C9CA61 /* HistoryStackView.swift */; };
 		40FF54162982354A00C9CA61 /* HistoryLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40FF54152982354A00C9CA61 /* HistoryLabel.swift */; };
@@ -45,6 +46,7 @@
 /* Begin PBXFileReference section */
 		407CCAC1297A521300E73142 /* CalculatorItemQueueProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculatorItemQueueProtocol.swift; sourceTree = "<group>"; };
 		40A385A6297934780030787D /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		40C5EB5B29836C2000BC49A5 /* UIStackView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIStackView+Extension.swift"; sourceTree = "<group>"; };
 		40FF53ED298126AA00C9CA61 /* UIScrollView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIScrollView+Extension.swift"; sourceTree = "<group>"; };
 		40FF54132982343000C9CA61 /* HistoryStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryStackView.swift; sourceTree = "<group>"; };
 		40FF54152982354A00C9CA61 /* HistoryLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryLabel.swift; sourceTree = "<group>"; };
@@ -140,6 +142,7 @@
 				BF9AE301297658C00021D14E /* Double+Extension.swift */,
 				BF283A7E2978D58E005DD048 /* String+Extension.swift */,
 				40FF53ED298126AA00C9CA61 /* UIScrollView+Extension.swift */,
+				40C5EB5B29836C2000BC49A5 /* UIStackView+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -328,6 +331,7 @@
 				BF9AE30529765ABB0021D14E /* CalculateItem.swift in Sources */,
 				BF9AE2F3297635580021D14E /* CalculatorItemQueue.swift in Sources */,
 				40FF54142982343000C9CA61 /* HistoryStackView.swift in Sources */,
+				40C5EB5C29836C2000BC49A5 /* UIStackView+Extension.swift in Sources */,
 				B21D83E3297687ED00E27BCA /* Formula.swift in Sources */,
 				BF283A7F2978D58E005DD048 /* String+Extension.swift in Sources */,
 				40FF53EE298126AA00C9CA61 /* UIScrollView+Extension.swift in Sources */,

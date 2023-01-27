@@ -124,7 +124,7 @@ extension CalculatorViewController {
     private func clearAll() {
         clearEntry()
         clearOperatorAndFormulaString()
-        //TODO: contentView remove subviews
+        calculationHistoryContentView.removeAllHistorySubviews()
     }
 }
 
