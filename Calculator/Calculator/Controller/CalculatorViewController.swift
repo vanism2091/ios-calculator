@@ -23,7 +23,7 @@ final class CalculatorViewController: UIViewController {
 
     let maxDigitLength = 20
     var isEntryNumberZeroOnly: Bool {
-        entryNumberLabel.text == Constant.zero
+        displayNumber == Constant.zero
     }
     var formulaString = ""
     var isNumberInTyping = false
@@ -93,19 +93,17 @@ final class CalculatorViewController: UIViewController {
     }
 
     @IBAction func zeroOrPointDidTap(_ sender: UIButton) {
-        guard let buttonName = sender.currentTitle,
+        guard let buttonTitle = sender.currentTitle,
               displayNumber.count < maxDigitLength else { return }
 
-        switch buttonName {
+        switch buttonTitle {
         case Constant.zero, Constant.doubleZero:
             if isEntryNumberZeroOnly { return }
-            entryNumberLabel.text?.append(buttonName)
-            if let number = entryNumberLabel.text, number.count > maxDigitLength {
-                entryNumberLabel.text?.removeLast()
-            }
+            let suffix = (displayNumber + buttonTitle).count > maxDigitLength ? Constant.zero : buttonTitle
+            displayNumber += suffix
         case Constant.dot:
-            guard false == entryNumberLabel.text?.contains(Constant.dot) else { return }
-            entryNumberLabel.text?.append(buttonName)
+            guard false == displayNumber.contains(Constant.dot) else { return }
+            displayNumber += buttonTitle
             isNumberInTyping = true
         default:
             return
