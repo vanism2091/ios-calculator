@@ -26,40 +26,52 @@ final class CalculatorViewController: UIViewController {
         entryNumberLabel.text == Constant.zero
     }
     var formulaString = ""
+    var isNumberInTyping = false
+
+    var displayNumber: String {
+        get { entryNumberLabel.text ?? "0" }
+        set { entryNumberLabel.text = newValue }
+    }
+
+    var displayOperator: String {
+        get { operatorLabel.text ?? "" }
+        set { operatorLabel.text = newValue }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
     }
 
     @IBAction func digitDidTap(_ sender: UIButton) {
-        guard let digit = sender.currentTitle,
-              let label = entryNumberLabel.text else { return }
-        if isEntryNumberZeroOnly || operatorLabel.text == nil {
-            entryNumberLabel.text = digit
-        } else if label.count < maxDigitLength {
-            entryNumberLabel.text?.append(digit)
+        guard let digit = sender.currentTitle, displayNumber.count < maxDigitLength else { return }
+        if isNumberInTyping {
+            displayNumber += digit
+        } else {
+            displayNumber = digit
+            isNumberInTyping = true
         }
     }
 
     @IBAction func arithmeticOperatorDidTap(_ sender: UIButton) {
-        if false == isEntryNumberZeroOnly,
-           let number = entryNumberLabel.text {
-            let `operator` = formulaString.isEmpty ? nil : operatorLabel.text
-            appendCalculationHistory(operator: `operator`, number: number)
-            formulaString += "\(`operator` ?? "")\(number)"
+        guard let buttonTitle = sender.currentTitle else { return }
+        if isNumberInTyping || false == isEntryNumberZeroOnly {
+            let currOperator = formulaString.isEmpty ? "" : displayOperator
+            appendCalculationHistory(operator: currOperator, number: displayNumber)
+            formulaString += "\(currOperator)\(displayNumber)"
         }
-        operatorLabel.text = sender.currentTitle
+        displayOperator = buttonTitle
         clearEntry()
     }
 
     @IBAction func equalsDidTap(_ sender: UIButton) {
-        if let `operator` = operatorLabel.text, let number = entryNumberLabel.text {
-            appendCalculationHistory(operator: `operator`, number: number)
-            formulaString += "\(`operator`)\(number)"
-            let result = calculationResult(from: formulaString)
-            entryNumberLabel.text = result
-            clearOperatorAndFormulaString()
-        }
+        guard false == displayOperator.isEmpty else { return }
+
+        appendCalculationHistory(operator: displayOperator, number: displayNumber)
+        formulaString += "\(displayOperator)\(displayNumber)"
+        let result = calculationResult(from: formulaString)
+        displayNumber = result
+        clearOperatorAndFormulaString()
+        isNumberInTyping = false
     }
 
     @IBAction func clearDidTap(_ sender: UIButton) {
@@ -75,16 +87,14 @@ final class CalculatorViewController: UIViewController {
 
     @IBAction func signToggleDidTap(_ sender: UIButton) {
         guard nil != sender.currentTitle,
-              false == isEntryNumberZeroOnly,
-              let numberString = entryNumberLabel.text,
-              let number = Double(numberString) else { return }
-        entryNumberLabel.text = String(number * -1)
+              isNumberInTyping,
+              let number = Double(displayNumber) else { return }
+        displayNumber = String(number * -1)
     }
 
     @IBAction func zeroOrPointDidTap(_ sender: UIButton) {
         guard let buttonName = sender.currentTitle,
-              let number = entryNumberLabel.text,
-              number.count < maxDigitLength else { return }
+              displayNumber.count < maxDigitLength else { return }
 
         switch buttonName {
         case Constant.zero, Constant.doubleZero:
@@ -96,13 +106,15 @@ final class CalculatorViewController: UIViewController {
         case Constant.dot:
             guard false == entryNumberLabel.text?.contains(Constant.dot) else { return }
             entryNumberLabel.text?.append(buttonName)
+            isNumberInTyping = true
         default:
             return
         }
     }
 
     private func appendCalculationHistory(operator: String?, number: String) {
-        let stackView = HistoryStackView(operator: `operator`, operand: number)
+        let parsedNumber = String(Double(number) ?? 0)
+        let stackView = HistoryStackView(operator: displayOperator, operand: parsedNumber)
         calculationHistoryContentView.addArrangedSubview(stackView)
 
         view.layoutIfNeeded()
@@ -113,11 +125,12 @@ final class CalculatorViewController: UIViewController {
 // MARK: Clear
 extension CalculatorViewController {
     private func clearEntry() {
-        entryNumberLabel.text = Constant.zero
+        displayNumber = Constant.zero
+        isNumberInTyping = false
     }
 
     private func clearOperatorAndFormulaString() {
-        operatorLabel.text = nil
+        displayOperator = ""
         formulaString = ""
     }
 
