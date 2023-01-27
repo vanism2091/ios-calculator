@@ -56,7 +56,8 @@ final class CalculatorViewController: UIViewController {
         if let `operator` = operatorLabel.text, let number = entryNumberLabel.text {
             appendCalculationHistory(operator: `operator`, number: number)
             formulaString += "\(`operator`)\(number)"
-            // calculation result
+            let result = calculationResult(from: formulaString)
+            entryNumberLabel.text = result
             clearOperatorAndFormulaString()
         }
     }
@@ -130,6 +131,19 @@ extension CalculatorViewController {
     private func clearAll() {
         clearEntry()
         clearOperatorAndFormulaString()
-        // contentView remove subviews
+        //TODO: contentView remove subviews
+    }
+}
+
+// MARK: calculationResult
+extension CalculatorViewController {
+    private func calculationResult(from formula: String) -> String {
+        let result = ExpressionParser.parse(from: formula).result()
+        switch result {
+        case .success(let res):
+            return String(res)
+        case .failure(let error):
+            return error.description
+        }
     }
 }
