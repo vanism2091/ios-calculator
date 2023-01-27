@@ -14,6 +14,7 @@ final class CalculatorViewController: UIViewController {
         static let dot = "."
         static let allClear = "AC"
         static let clearEntry = "CE"
+        static let NotANumber = "NaN"
     }
 
     @IBOutlet private weak var operatorLabel: UILabel!
@@ -62,11 +63,12 @@ final class CalculatorViewController: UIViewController {
     }
 
     @IBAction private func arithmeticOperatorDidTap(_ sender: UIButton) {
+        if displayNumber == Constant.NotANumber {
+            displayNumber = "0"
+        }
         guard let buttonTitle = sender.currentTitle else { return }
         if isNumberInTyping || false == isDisplayNumberZeroOnly {
-            let currOperator = formulaString.isEmpty ? "" : displayOperator
-            appendCalculationHistory(operator: currOperator, number: displayNumber)
-            formulaString += "\(currOperator)\(displayNumber)"
+            addCalculationHistory()
         }
         displayOperator = buttonTitle
         clearEntry()
@@ -74,8 +76,7 @@ final class CalculatorViewController: UIViewController {
 
     @IBAction private func equalsDidTap(_ sender: UIButton) {
         guard false == displayOperator.isEmpty else { return }
-        appendCalculationHistory(operator: displayOperator, number: displayNumber)
-        formulaString += "\(displayOperator)\(displayNumber)"
+        addCalculationHistory()
         let result = calculationResult(from: formulaString)
         displayNumber = result
         clearOperatorAndFormulaString()
@@ -120,7 +121,7 @@ final class CalculatorViewController: UIViewController {
 }
 
 extension CalculatorViewController {
-    // MARK: calculationResult
+    // MARK: CalculationResult
     private func calculationResult(from formula: String) -> String {
         let result = ExpressionParser.parse(from: formula).result()
         switch result {
@@ -131,17 +132,23 @@ extension CalculatorViewController {
         }
     }
 
-    // MARK: parse - numberFormat
+    // MARK: Parse - numberFormat
     private func parse(_ value: String) -> String {
         let removedComma = value.replacingOccurrences(of: ",", with: "")
         let nsNumber = numberFormatter.number(from: removedComma)
         return (numberFormatter.string(for: nsNumber) ?? "0")
     }
 
-    // MARK: Append History stack
-    private func appendCalculationHistory(operator: String?, number: String) {
-        let parsedNumber = parse(number)
-        let stackView = HistoryStackView(operator: displayOperator, operand: parsedNumber)
+    // MARK: Add History
+    private func addCalculationHistory() {
+        let currOperator = formulaString.isEmpty ? "" : displayOperator
+        appendHistoryStackView(operator: currOperator)
+        formulaString += "\(currOperator)\(displayNumber)"
+    }
+
+    private func appendHistoryStackView(operator: String?) {
+        let parsedNumber = parse(displayNumber)
+        let stackView = HistoryStackView(operator: `operator`, operand: parsedNumber)
         calculationHistoryContentView.addArrangedSubview(stackView)
 
         view.layoutIfNeeded()
