@@ -108,13 +108,6 @@ final class CalculatorViewController: UIViewController {
         view.layoutIfNeeded()
         calculationHistoryScrollView.scrollToBottom()
     }
-
-    private func buildDisplayLabel(text: String?) -> UILabel {
-        let label = UILabel()
-        label.text = text
-        label.textColor = .white
-        return label
-    }
 }
 
 // MARK: Clear
