@@ -41,8 +41,8 @@ struct Formula {
         }
 
         let result = pairs.reduce(operands.values[0]) { (partialResult, pair) in
-            let (currentOperand, currentOperator) = pair
-            return currentOperator.calculate(lhs: partialResult, rhs: currentOperand)
+            let (operand, `operator`) = pair
+            return `operator`.calculate(lhs: partialResult, rhs: operand)
         }
         return .success(result)
     }
