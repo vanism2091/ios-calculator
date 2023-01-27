@@ -25,6 +25,7 @@ final class CalculatorViewController: UIViewController {
     var isEntryNumberZeroOnly: Bool {
         entryNumberLabel.text == Constant.zero
     }
+    var formulaString = ""
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,15 +43,22 @@ final class CalculatorViewController: UIViewController {
 
     @IBAction func arithmeticOperatorDidTap(_ sender: UIButton) {
         if false == isEntryNumberZeroOnly,
-           let currentNumber = entryNumberLabel.text {
-            appendCalculationHistory(operator: operatorLabel.text, number: currentNumber)
+           let number = entryNumberLabel.text {
+            let `operator` = formulaString.isEmpty ? nil : operatorLabel.text
+            appendCalculationHistory(operator: `operator`, number: number)
+            formulaString += "\(`operator` ?? "")\(number)"
         }
         operatorLabel.text = sender.currentTitle
         clearEntry()
     }
 
     @IBAction func equalsDidTap(_ sender: UIButton) {
-        print(sender.currentTitle ?? "==")
+        if let `operator` = operatorLabel.text, let number = entryNumberLabel.text {
+            appendCalculationHistory(operator: `operator`, number: number)
+            formulaString += "\(`operator`)\(number)"
+            // calculation result
+            clearOperatorAndFormulaString()
+        }
     }
 
     @IBAction func clearDidTap(_ sender: UIButton) {
@@ -66,15 +74,16 @@ final class CalculatorViewController: UIViewController {
 
     @IBAction func signToggleDidTap(_ sender: UIButton) {
         guard nil != sender.currentTitle,
-              let currentNumberString = entryNumberLabel.text,
-              let currentNumber = Double(currentNumberString) else { return }
-        entryNumberLabel.text = String(currentNumber * -1)
+              false == isEntryNumberZeroOnly,
+              let numberString = entryNumberLabel.text,
+              let number = Double(numberString) else { return }
+        entryNumberLabel.text = String(number * -1)
     }
 
     @IBAction func zeroOrPointDidTap(_ sender: UIButton) {
         guard let buttonName = sender.currentTitle,
-              let currentNumber = entryNumberLabel.text,
-              currentNumber.count < maxDigitLength else { return }
+              let number = entryNumberLabel.text,
+              number.count < maxDigitLength else { return }
 
         switch buttonName {
         case Constant.zero, Constant.doubleZero:
@@ -113,9 +122,14 @@ extension CalculatorViewController {
         entryNumberLabel.text = Constant.zero
     }
 
-    private func clearAll() {
-        entryNumberLabel.text = Constant.zero
+    private func clearOperatorAndFormulaString() {
         operatorLabel.text = nil
+        formulaString = ""
+    }
+
+    private func clearAll() {
+        clearEntry()
+        clearOperatorAndFormulaString()
         // contentView remove subviews
     }
 }
