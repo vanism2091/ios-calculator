@@ -38,12 +38,10 @@ final class CalculatorViewController: UIViewController {
     }
     private var formulaString = ""
     private var isNumberInTyping = false
-
     private var displayNumber: String {
         get { entryNumberLabel.text?.replacingOccurrences(of: ",", with: "") ?? "0" }
         set { entryNumberLabel.text = newValue }
     }
-
     private var displayOperator: String {
         get { operatorLabel.text ?? "" }
         set { operatorLabel.text = newValue }
@@ -133,7 +131,7 @@ extension CalculatorViewController {
         }
     }
 
-    // MARK: formatter - parse
+    // MARK: parse - numberFormat
     private func parse(_ value: String) -> String {
         let removedComma = value.replacingOccurrences(of: ",", with: "")
         let nsNumber = numberFormatter.number(from: removedComma)
@@ -149,7 +147,7 @@ extension CalculatorViewController {
         view.layoutIfNeeded()
         calculationHistoryScrollView.scrollToBottom()
     }
-    
+
     // MARK: Clear
     private func clearEntry() {
         displayNumber = Constant.zero
