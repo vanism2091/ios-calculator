@@ -21,15 +21,26 @@ final class CalculatorViewController: UIViewController {
     @IBOutlet private weak var calculationHistoryScrollView: UIScrollView!
     @IBOutlet private weak var calculationHistoryContentView: UIStackView!
 
+    private let numberFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = 0
+        formatter.maximumFractionDigits = 20
+        return formatter
+    }()
+
     private let maxDigitLength = 20
-    private var isEntryNumberZeroOnly: Bool {
+    private var isDisplayNumberZeroOnly: Bool {
         displayNumber == Constant.zero
+    }
+    private var hasDisplayNumberDecimalPlaces: Bool {
+        displayNumber.contains(Constant.dot)
     }
     private var formulaString = ""
     private var isNumberInTyping = false
 
     private var displayNumber: String {
-        get { entryNumberLabel.text ?? "0" }
+        get { entryNumberLabel.text?.replacingOccurrences(of: ",", with: "") ?? "0" }
         set { entryNumberLabel.text = newValue }
     }
 
@@ -54,7 +65,7 @@ final class CalculatorViewController: UIViewController {
 
     @IBAction private func arithmeticOperatorDidTap(_ sender: UIButton) {
         guard let buttonTitle = sender.currentTitle else { return }
-        if isNumberInTyping || false == isEntryNumberZeroOnly {
+        if isNumberInTyping || false == isDisplayNumberZeroOnly {
             let currOperator = formulaString.isEmpty ? "" : displayOperator
             appendCalculationHistory(operator: currOperator, number: displayNumber)
             formulaString += "\(currOperator)\(displayNumber)"
@@ -65,7 +76,6 @@ final class CalculatorViewController: UIViewController {
 
     @IBAction private func equalsDidTap(_ sender: UIButton) {
         guard false == displayOperator.isEmpty else { return }
-
         appendCalculationHistory(operator: displayOperator, number: displayNumber)
         formulaString += "\(displayOperator)\(displayNumber)"
         let result = calculationResult(from: formulaString)
@@ -87,9 +97,9 @@ final class CalculatorViewController: UIViewController {
 
     @IBAction private func signToggleDidTap(_ sender: UIButton) {
         guard nil != sender.currentTitle,
-              isNumberInTyping,
+              false == isDisplayNumberZeroOnly,
               let number = Double(displayNumber) else { return }
-        displayNumber = String(number * -1)
+        displayNumber = parse(String(number * -1))
     }
 
     @IBAction private func zeroOrPointDidTap(_ sender: UIButton) {
@@ -98,30 +108,49 @@ final class CalculatorViewController: UIViewController {
 
         switch buttonTitle {
         case Constant.zero, Constant.doubleZero:
-            if isEntryNumberZeroOnly { return }
+            if isDisplayNumberZeroOnly { return }
             let suffix = (displayNumber + buttonTitle).count > maxDigitLength ? Constant.zero : buttonTitle
             displayNumber += suffix
         case Constant.dot:
-            guard false == displayNumber.contains(Constant.dot) else { return }
+            guard false == hasDisplayNumberDecimalPlaces else { return }
             displayNumber += buttonTitle
             isNumberInTyping = true
         default:
             return
         }
     }
+}
 
+extension CalculatorViewController {
+    // MARK: calculationResult
+    private func calculationResult(from formula: String) -> String {
+        let result = ExpressionParser.parse(from: formula).result()
+        switch result {
+        case .success(let res):
+            return parse(String(res))
+        case .failure(let error):
+            return error.description
+        }
+    }
+
+    // MARK: formatter - parse
+    private func parse(_ value: String) -> String {
+        let removedComma = value.replacingOccurrences(of: ",", with: "")
+        let nsNumber = numberFormatter.number(from: removedComma)
+        return (numberFormatter.string(for: nsNumber) ?? "0")
+    }
+
+    // MARK: Append History stack
     private func appendCalculationHistory(operator: String?, number: String) {
-        let parsedNumber = String(Double(number) ?? 0)
+        let parsedNumber = parse(number)
         let stackView = HistoryStackView(operator: displayOperator, operand: parsedNumber)
         calculationHistoryContentView.addArrangedSubview(stackView)
 
         view.layoutIfNeeded()
         calculationHistoryScrollView.scrollToBottom()
     }
-}
-
-// MARK: Clear
-extension CalculatorViewController {
+    
+    // MARK: Clear
     private func clearEntry() {
         displayNumber = Constant.zero
         isNumberInTyping = false
@@ -136,18 +165,5 @@ extension CalculatorViewController {
         clearEntry()
         clearOperatorAndFormulaString()
         calculationHistoryContentView.removeAllHistorySubviews()
-    }
-}
-
-// MARK: calculationResult
-extension CalculatorViewController {
-    private func calculationResult(from formula: String) -> String {
-        let result = ExpressionParser.parse(from: formula).result()
-        switch result {
-        case .success(let res):
-            return String(res)
-        case .failure(let error):
-            return error.description
-        }
     }
 }
