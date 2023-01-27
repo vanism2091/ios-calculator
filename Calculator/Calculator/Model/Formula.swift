@@ -22,8 +22,8 @@ enum FormulaError: Error {
 }
 
 struct Formula {
-    var operands: CalculatorItemQueue<Double>
-    var operators: CalculatorItemQueue<Operator>
+    private var operands: CalculatorItemQueue<Double>
+    private var operators: CalculatorItemQueue<Operator>
 
     init(operands: [Double] = [], operators: [Operator] = []) {
         self.operands = CalculatorItemQueue(items: operands)

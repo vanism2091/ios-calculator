@@ -8,7 +8,7 @@ import UIKit
 
 final class CalculatorViewController: UIViewController {
 
-    enum Constant {
+    private enum Constant {
         static let zero = "0"
         static let doubleZero = "00"
         static let dot = "."
@@ -16,24 +16,24 @@ final class CalculatorViewController: UIViewController {
         static let clearEntry = "CE"
     }
 
-    @IBOutlet weak var operatorLabel: UILabel!
-    @IBOutlet weak var entryNumberLabel: UILabel!
-    @IBOutlet weak var calculationHistoryScrollView: UIScrollView!
-    @IBOutlet weak var calculationHistoryContentView: UIStackView!
+    @IBOutlet private weak var operatorLabel: UILabel!
+    @IBOutlet private weak var entryNumberLabel: UILabel!
+    @IBOutlet private weak var calculationHistoryScrollView: UIScrollView!
+    @IBOutlet private weak var calculationHistoryContentView: UIStackView!
 
-    let maxDigitLength = 20
-    var isEntryNumberZeroOnly: Bool {
+    private let maxDigitLength = 20
+    private var isEntryNumberZeroOnly: Bool {
         displayNumber == Constant.zero
     }
-    var formulaString = ""
-    var isNumberInTyping = false
+    private var formulaString = ""
+    private var isNumberInTyping = false
 
-    var displayNumber: String {
+    private var displayNumber: String {
         get { entryNumberLabel.text ?? "0" }
         set { entryNumberLabel.text = newValue }
     }
 
-    var displayOperator: String {
+    private var displayOperator: String {
         get { operatorLabel.text ?? "" }
         set { operatorLabel.text = newValue }
     }
@@ -42,7 +42,7 @@ final class CalculatorViewController: UIViewController {
         super.viewDidLoad()
     }
 
-    @IBAction func digitDidTap(_ sender: UIButton) {
+    @IBAction private func digitDidTap(_ sender: UIButton) {
         guard let digit = sender.currentTitle, displayNumber.count < maxDigitLength else { return }
         if isNumberInTyping {
             displayNumber += digit
@@ -52,7 +52,7 @@ final class CalculatorViewController: UIViewController {
         }
     }
 
-    @IBAction func arithmeticOperatorDidTap(_ sender: UIButton) {
+    @IBAction private func arithmeticOperatorDidTap(_ sender: UIButton) {
         guard let buttonTitle = sender.currentTitle else { return }
         if isNumberInTyping || false == isEntryNumberZeroOnly {
             let currOperator = formulaString.isEmpty ? "" : displayOperator
@@ -63,7 +63,7 @@ final class CalculatorViewController: UIViewController {
         clearEntry()
     }
 
-    @IBAction func equalsDidTap(_ sender: UIButton) {
+    @IBAction private func equalsDidTap(_ sender: UIButton) {
         guard false == displayOperator.isEmpty else { return }
 
         appendCalculationHistory(operator: displayOperator, number: displayNumber)
@@ -74,7 +74,7 @@ final class CalculatorViewController: UIViewController {
         isNumberInTyping = false
     }
 
-    @IBAction func clearDidTap(_ sender: UIButton) {
+    @IBAction private func clearDidTap(_ sender: UIButton) {
         switch sender.currentTitle {
         case Constant.clearEntry:
             clearEntry()
@@ -85,14 +85,14 @@ final class CalculatorViewController: UIViewController {
         }
     }
 
-    @IBAction func signToggleDidTap(_ sender: UIButton) {
+    @IBAction private func signToggleDidTap(_ sender: UIButton) {
         guard nil != sender.currentTitle,
               isNumberInTyping,
               let number = Double(displayNumber) else { return }
         displayNumber = String(number * -1)
     }
 
-    @IBAction func zeroOrPointDidTap(_ sender: UIButton) {
+    @IBAction private func zeroOrPointDidTap(_ sender: UIButton) {
         guard let buttonTitle = sender.currentTitle,
               displayNumber.count < maxDigitLength else { return }
 
