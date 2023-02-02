@@ -54,7 +54,9 @@ final class CalculatorViewController: UIViewController {
     }
 
     @IBAction private func digitButtonDidTap(_ sender: UIButton) {
-        guard let digit = sender.currentTitle, displayNumber.count < maxDigitLength else { return }
+        guard let digit = sender.currentTitle, displayNumber.count < maxDigitLength else {
+            return
+        }
         if isNumberInTyping {
             displayNumber += digit
         } else {
@@ -67,7 +69,9 @@ final class CalculatorViewController: UIViewController {
         if displayNumber == Constant.NotANumber {
             displayNumber = "0"
         }
-        guard let buttonTitle = sender.currentTitle else { return }
+        guard let buttonTitle = sender.currentTitle else {
+            return
+        }
         if isNumberInTyping || false == isDisplayNumberZeroOnly {
             addCalculationHistory()
         }
@@ -76,7 +80,9 @@ final class CalculatorViewController: UIViewController {
     }
 
     @IBAction private func equalsButtonDidTap(_ sender: UIButton) {
-        guard false == displayOperator.isEmpty else { return }
+        guard false == displayOperator.isEmpty else {
+            return
+        }
         addCalculationHistory()
         let result = calculationResult(from: formulaString)
         displayNumber = result
@@ -98,17 +104,23 @@ final class CalculatorViewController: UIViewController {
     @IBAction private func signToggleButtonDidTap(_ sender: UIButton) {
         guard nil != sender.currentTitle,
               false == isDisplayNumberZeroOnly,
-              let number = Double(displayNumber) else { return }
+              let number = Double(displayNumber) else {
+            return
+        }
         displayNumber = parse(String(number * -1))
     }
 
     @IBAction private func zeroOrPointButtonDidTap(_ sender: UIButton) {
         guard let buttonTitle = sender.currentTitle,
-              displayNumber.count < maxDigitLength else { return }
+              displayNumber.count < maxDigitLength else {
+            return
+        }
 
         switch buttonTitle {
         case Constant.zero, Constant.doubleZero:
-            if isDisplayNumberZeroOnly { return }
+            if isDisplayNumberZeroOnly {
+                return
+            }
             let suffix = (displayNumber + buttonTitle).count > maxDigitLength ? Constant.zero : buttonTitle
             displayNumber += suffix
         case Constant.dot:
