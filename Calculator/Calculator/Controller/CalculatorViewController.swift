@@ -53,7 +53,7 @@ final class CalculatorViewController: UIViewController {
         }
     }
 
-    @IBAction private func digitDidTap(_ sender: UIButton) {
+    @IBAction private func digitButtonDidTap(_ sender: UIButton) {
         guard let digit = sender.currentTitle, displayNumber.count < maxDigitLength else { return }
         if isNumberInTyping {
             displayNumber += digit
@@ -63,7 +63,7 @@ final class CalculatorViewController: UIViewController {
         }
     }
 
-    @IBAction private func arithmeticOperatorDidTap(_ sender: UIButton) {
+    @IBAction private func arithmeticOperatorButtonDidTap(_ sender: UIButton) {
         if displayNumber == Constant.NotANumber {
             displayNumber = "0"
         }
@@ -75,7 +75,7 @@ final class CalculatorViewController: UIViewController {
         clearEntry()
     }
 
-    @IBAction private func equalsDidTap(_ sender: UIButton) {
+    @IBAction private func equalsButtonDidTap(_ sender: UIButton) {
         guard false == displayOperator.isEmpty else { return }
         addCalculationHistory()
         let result = calculationResult(from: formulaString)
@@ -84,7 +84,7 @@ final class CalculatorViewController: UIViewController {
         isNumberInTyping = false
     }
 
-    @IBAction private func clearDidTap(_ sender: UIButton) {
+    @IBAction private func clearButtonDidTap(_ sender: UIButton) {
         switch sender.currentTitle {
         case Constant.clearEntry:
             clearEntry()
@@ -95,14 +95,14 @@ final class CalculatorViewController: UIViewController {
         }
     }
 
-    @IBAction private func signToggleDidTap(_ sender: UIButton) {
+    @IBAction private func signToggleButtonDidTap(_ sender: UIButton) {
         guard nil != sender.currentTitle,
               false == isDisplayNumberZeroOnly,
               let number = Double(displayNumber) else { return }
         displayNumber = parse(String(number * -1))
     }
 
-    @IBAction private func zeroOrPointDidTap(_ sender: UIButton) {
+    @IBAction private func zeroOrPointButtonDidTap(_ sender: UIButton) {
         guard let buttonTitle = sender.currentTitle,
               displayNumber.count < maxDigitLength else { return }
 
