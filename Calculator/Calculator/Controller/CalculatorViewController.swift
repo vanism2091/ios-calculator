@@ -37,14 +37,21 @@ final class CalculatorViewController: UIViewController {
     private var formulaString = ""
     private var isNumberInTyping = false
     private var displayNumber: String {
-        get { entryNumberLabel.text?.replacingOccurrences(of: ",", with: "") ?? "0" }
-        set { entryNumberLabel.text = newValue }
+        get {
+            entryNumberLabel.text?.replacingOccurrences(of: ",", with: "") ?? "0"
+        }
+        set {
+            entryNumberLabel.text = newValue
+        }
     }
     private var displayOperator: String {
-        get { operatorLabel.text ?? "" }
-        set { operatorLabel.text = newValue }
+        get {
+            operatorLabel.text ?? ""
+        }
+        set {
+            operatorLabel.text = newValue
+        }
     }
-
 
     @IBAction private func digitDidTap(_ sender: UIButton) {
         guard let digit = sender.currentTitle, displayNumber.count < maxDigitLength else { return }
