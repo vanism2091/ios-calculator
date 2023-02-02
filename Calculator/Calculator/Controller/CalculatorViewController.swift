@@ -15,6 +15,9 @@ final class CalculatorViewController: UIViewController {
         static let allClear = "AC"
         static let clearEntry = "CE"
         static let NotANumber = "NaN"
+        static let emptyString = ""
+        static let comma = ","
+        static let nine = "9"
     }
 
     @IBOutlet private weak var operatorLabel: UILabel!
@@ -30,25 +33,30 @@ final class CalculatorViewController: UIViewController {
         return formatter
     }()
 
-    private let maxDigitLength = 20
+    private let maxDigitLength = 15
     private var isDisplayNumberZeroOnly: Bool {
         displayNumber == Constant.zero
     }
-    private var formulaString = ""
-    private var isNumberInTyping = false
-    private var displayNumber: String {
-        get {
-            entryNumberLabel.text?.replacingOccurrences(of: ",", with: "") ?? "0"
-        }
-        set {
-            entryNumberLabel.text = newValue
+    private var formulaString = Constant.emptyString
+    private var isTypingNumber = false
+    private var displayNumber: String = Constant.zero {
+        willSet {
+            guard let lastElement = newValue.last else {
+                return
+            }
+            let lastCharacter = String(lastElement)
+            switch lastCharacter {
+            case Constant.dot:
+                entryNumberLabel.text?.append(lastCharacter)
+            case Constant.zero...Constant.nine:
+                entryNumberLabel.text = parse(newValue)
+            default:
+                entryNumberLabel.text = newValue
+            }
         }
     }
-    private var displayOperator: String {
-        get {
-            operatorLabel.text ?? ""
-        }
-        set {
+    private var displayOperator: String = Constant.emptyString {
+        willSet {
             operatorLabel.text = newValue
         }
     }
@@ -57,22 +65,22 @@ final class CalculatorViewController: UIViewController {
         guard let digit = sender.currentTitle, displayNumber.count < maxDigitLength else {
             return
         }
-        if isNumberInTyping {
+        if isTypingNumber {
             displayNumber += digit
         } else {
             displayNumber = digit
-            isNumberInTyping = true
+            isTypingNumber = true
         }
     }
 
     @IBAction private func arithmeticOperatorButtonDidTap(_ sender: UIButton) {
         if displayNumber == Constant.NotANumber {
-            displayNumber = "0"
+            displayNumber = Constant.zero
         }
         guard let buttonTitle = sender.currentTitle else {
             return
         }
-        if isNumberInTyping || false == isDisplayNumberZeroOnly {
+        if isTypingNumber || false == isDisplayNumberZeroOnly {
             addCalculationHistory()
         }
         displayOperator = buttonTitle
@@ -83,11 +91,13 @@ final class CalculatorViewController: UIViewController {
         guard false == displayOperator.isEmpty else {
             return
         }
+        print(formulaString)
         addCalculationHistory()
         let result = calculationResult(from: formulaString)
+        print(formulaString, result, displayNumber)
         displayNumber = result
         clearOperatorAndFormulaString()
-        isNumberInTyping = false
+        isTypingNumber = false
     }
 
     @IBAction private func clearButtonDidTap(_ sender: UIButton) {
@@ -107,7 +117,7 @@ final class CalculatorViewController: UIViewController {
               let number = Double(displayNumber) else {
             return
         }
-        displayNumber = parse(String(number * -1))
+        displayNumber = String(number * -1)
     }
 
     @IBAction private func zeroOrPointButtonDidTap(_ sender: UIButton) {
@@ -128,7 +138,7 @@ final class CalculatorViewController: UIViewController {
                 return
             }
             displayNumber += buttonTitle
-            isNumberInTyping = true
+            isTypingNumber = true
         default:
             return
         }
@@ -141,7 +151,7 @@ extension CalculatorViewController {
         let result = ExpressionParser.parse(from: formula).result()
         switch result {
         case .success(let res):
-            return parse(String(res))
+            return String(res)
         case .failure(let error):
             return error.description
         }
@@ -149,14 +159,14 @@ extension CalculatorViewController {
 
     // MARK: Parse - numberFormat
     private func parse(_ value: String) -> String {
-        let removedComma = value.replacingOccurrences(of: ",", with: "")
+        let removedComma = value.replacingOccurrences(of: Constant.comma, with: Constant.emptyString)
         let nsNumber = numberFormatter.number(from: removedComma)
-        return (numberFormatter.string(for: nsNumber) ?? "0")
+        return (numberFormatter.string(for: nsNumber) ?? Constant.zero)
     }
 
     // MARK: Add History
     private func addCalculationHistory() {
-        let currOperator = formulaString.isEmpty ? "" : displayOperator
+        let currOperator = formulaString.isEmpty ? Constant.emptyString : displayOperator
         appendHistoryStackView(operator: currOperator)
         formulaString += "\(currOperator)\(displayNumber)"
     }
@@ -173,12 +183,12 @@ extension CalculatorViewController {
     // MARK: Clear
     private func clearEntry() {
         displayNumber = Constant.zero
-        isNumberInTyping = false
+        isTypingNumber = false
     }
 
     private func clearOperatorAndFormulaString() {
-        displayOperator = ""
-        formulaString = ""
+        displayOperator = Constant.emptyString
+        formulaString = Constant.emptyString
     }
 
     private func clearAll() {
