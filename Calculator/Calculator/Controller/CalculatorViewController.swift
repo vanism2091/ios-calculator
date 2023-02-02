@@ -34,9 +34,6 @@ final class CalculatorViewController: UIViewController {
     private var isDisplayNumberZeroOnly: Bool {
         displayNumber == Constant.zero
     }
-    private var hasDisplayNumberDecimalPlaces: Bool {
-        displayNumber.contains(Constant.dot)
-    }
     private var formulaString = ""
     private var isNumberInTyping = false
     private var displayNumber: String {
@@ -48,9 +45,6 @@ final class CalculatorViewController: UIViewController {
         set { operatorLabel.text = newValue }
     }
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
 
     @IBAction private func digitDidTap(_ sender: UIButton) {
         guard let digit = sender.currentTitle, displayNumber.count < maxDigitLength else { return }
@@ -111,7 +105,9 @@ final class CalculatorViewController: UIViewController {
             let suffix = (displayNumber + buttonTitle).count > maxDigitLength ? Constant.zero : buttonTitle
             displayNumber += suffix
         case Constant.dot:
-            guard false == hasDisplayNumberDecimalPlaces else { return }
+            if displayNumber.contains(Constant.dot) {
+                return
+            }
             displayNumber += buttonTitle
             isNumberInTyping = true
         default:
