@@ -9,7 +9,7 @@ import UIKit
 
 extension UIStackView {
     func removeAllHistorySubviews() {
-        arrangedSubviews.dropFirst().forEach { history in
+        arrangedSubviews.forEach { history in
             history.removeFromSuperview()
         }
     }
